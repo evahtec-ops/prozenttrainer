@@ -86,13 +86,15 @@
                 if ($scores && count($scores) > 0) {
                     $rank = 1;
                     foreach ($scores as $score) {
+                        $date = $score['date'] ?? 'now';
+                        $formattedDate = date('d.m.Y H:i', strtotime($date));
                         echo "<tr>";
                         echo "<td class='rank'>#{$rank}</td>";
                         echo "<td>" . htmlspecialchars($score['name']) . "</td>";
                         echo "<td class='score'>" . htmlspecialchars($score['score']) . "</td>";
                         echo "<td>" . htmlspecialchars($score['wrong']) . "</td>";
                         echo "<td class='settings'>Typ: {$score['type']}<br>Bereich: {$score['base']}<br>Zahlen: {$score['num']}<br>Komma: {$score['dec']}</td>";
-                        echo "<td>" . htmlspecialchars($score['date']) . "</td>";
+                        echo "<td>" . htmlspecialchars($formattedDate) . "</td>";
                         echo "</tr>";
                         $rank++;
                     }

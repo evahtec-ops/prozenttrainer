@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'base' => htmlspecialchars($data['base'] ?? ''),
             'num' => htmlspecialchars($data['num'] ?? ''),
             'dec' => htmlspecialchars($data['dec'] ?? ''),
-            'date' => date('d.m.Y H:i', strtotime($data['date'] ?? 'now'))
+            'date' => $data['date'] ?? date('c') // ISO 8601
         ];
 
         // In Datei speichern (eine JSON-Zeile pro Eintrag oder als komplettes JSON-Array)
