@@ -399,19 +399,6 @@
       font-weight: 700;
     }
 
-    .hs-type-badge {
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: var(--surface-light);
-      color: var(--text-muted);
-      margin-left: 8px;
-      border: 1px solid var(--border);
-      vertical-align: middle;
-    }
-
     /* Top 3 Highlights */
     @keyframes shine {
       0% { background-position: -200% center; }
@@ -491,7 +478,7 @@
     <main class="card">
       <nav class="mode-nav">
         <button id="nav-training" class="active" onclick="setAppMode('training')">Training</button>
-        <button id="nav-performance" onclick="setAppMode('performance')">Challange</button>
+        <button id="nav-performance" onclick="setAppMode('performance')">Challenge</button>
         <button id="nav-highscores" onclick="setAppMode('highscores')">Rangliste</button>
       </nav>
 
@@ -631,7 +618,7 @@
     <section class="card settings-card">
       <h3>Einstellungen</h3>
       <p id="perf-lock-hint" style="display: none; color: var(--warning); font-size: 11px; margin-bottom: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
-        Im Challange Modus sind die Prozente nicht veränderbar.
+        Im Challenge Modus sind die Prozente nicht veränderbar.
       </p>
       
       <div class="setting-item">
@@ -689,7 +676,7 @@
     </footer>
   </div>
 
-  <!-- Impressum Modal -->
+<!-- Impressum Modal -->
 <div id="impressum-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);">
   <div style="background: var(--surface); max-width: 600px; margin: 20px auto; padding: 32px; border-radius: 24px; border: 1px solid var(--border); position: relative; color: var(--text-main);">
     
@@ -777,7 +764,26 @@
   </div>
 </div>
 
+  <!-- Alert Modal -->
+  <div id="alert-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px);">
+    <div style="background: var(--surface); max-width: 400px; width: 100%; padding: 32px; border-radius: 24px; border: 1px solid var(--border); text-align: center;">
+      <div id="alert-icon" style="font-size: 40px; margin-bottom: 16px;">⚠️</div>
+      <p id="alert-message" style="font-size: 14px; line-height: 1.6; margin-bottom: 24px; color: var(--text-main);"></p>
+      <button onclick="closeAlert()" class="btn-primary">OK</button>
+    </div>
+  </div>
+
   <script>
+    function showAlert(message, icon = '⚠️') {
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('alert-icon').innerText = icon;
+      document.getElementById('alert-modal').style.display = 'flex';
+    }
+
+    function closeAlert() {
+      document.getElementById('alert-modal').style.display = 'none';
+    }
+
     const translations = {
       de: {
         title: "Prozent Profi | Rechentrainer",
@@ -1045,8 +1051,8 @@
         const fmt = (num) => num.toString().replace('.', currentLang === 'de' ? ',' : '.');
         let text = '';
         if (currentTask.mode === 'W') text = t.task_w.replace('{p}', fmt(currentTask.p)).replace('{g}', fmt(currentTask.g));
-        else if (currentTask.mode === 'G') text = t.task_g.replace('{w}', fmt(currentTask.w)).replace('{p}', fmt(currentTask.p));
-        else if (currentTask.mode === 'P') text = t.task_p.replace('{w}', fmt(currentTask.w)).replace('{g}', fmt(currentTask.g));
+        if (currentTask.mode === 'G') text = t.task_g.replace('{w}', fmt(currentTask.w)).replace('{p}', fmt(currentTask.p));
+        if (currentTask.mode === 'P') text = t.task_p.replace('{w}', fmt(currentTask.w)).replace('{g}', fmt(currentTask.g));
         document.getElementById('task-text').innerText = text;
         updateDifficultyBadge(currentTask.g, currentTask.p, currentTask.mode, currentTask.result);
       }
@@ -1084,7 +1090,7 @@
           if (!Array.isArray(data)) return;
           
           // Check top 3 in "Gemischt" as the default "general" leaderboard
-          let mixedScores = data.filter(s => s.type === 'mixed' || s.type === 'Gemischt' || s.type === 'Mixed');
+          let mixedScores = data.filter(s => s.type === 'Gemischt');
           
           if (bestOnly) {
             const bestScores = {};
@@ -1257,27 +1263,16 @@
         })
         .then(data => {
           if (!data || data.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.loading_highscores}</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.no_highscores}</div>`;
             return;
           }
           
-          let filtered = data.filter(score => {
-            // Handle legacy German strings and new keys
-            const type = score.type;
-            if (filterType === 'mixed') {
-              return type === 'mixed' || type === 'Gemischt' || type === 'Mixed';
-            }
-            if (filterType === 'W') {
-              return type === 'W' || type === 'Prozentwert (W)' || type === 'Percentage Value (W)';
-            }
-            if (filterType === 'G') {
-              return type === 'G' || type === 'Grundwert (G)' || type === 'Base Value (G)';
-            }
-            if (filterType === 'P') {
-              return type === 'P' || type === 'Prozentsatz (p)' || type === 'Percentage Rate (p)';
-            }
-            return false;
-          });
+          let filtered = data.filter(score => score.type === filterType || (filterType === 'mixed' && (score.type === 'Gemischt' || score.type === 'Mixed')));
+
+          // Also handle legacy data if any
+          if (filterType === 'W') filtered = data.filter(s => s.type === 'W' || s.type === 'Prozentwert (W)');
+          if (filterType === 'G') filtered = data.filter(s => s.type === 'G' || s.type === 'Grundwert (G)');
+          if (filterType === 'P') filtered = data.filter(s => s.type === 'P' || s.type === 'Prozentsatz (p)');
 
           if (bestOnly) {
             const bestScores = {};
@@ -1343,19 +1338,20 @@
           dateStr = dateObj.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US');
         }
 
-        const typeKey = score.type;
-        let translatedType = typeKey;
-        if (typeKey === 'mixed' || typeKey === 'Gemischt' || typeKey === 'Mixed') translatedType = t.filter_mixed;
-        else if (typeKey === 'W' || typeKey === 'Prozentwert (W)' || typeKey === 'Percentage Value (W)') translatedType = t.filter_w;
-        else if (typeKey === 'G' || typeKey === 'Grundwert (G)' || typeKey === 'Base Value (G)') translatedType = t.filter_g;
-        else if (typeKey === 'P' || typeKey === 'Prozentsatz (p)' || typeKey === 'Percentage Rate (p)') translatedType = t.filter_p;
+        let typeDisplay = score.type;
+        if (score.type === 'mixed') typeDisplay = t.filter_mixed;
+        if (score.type === 'W') typeDisplay = t.filter_w;
+        if (score.type === 'G') typeDisplay = t.filter_g;
+        if (score.type === 'P') typeDisplay = t.filter_p;
 
         item.innerHTML = `
           <div class="hs-rank-circle">${globalRank}</div>
           <div class="hs-info">
-            <div class="hs-name">${escapeHtml(score.name)} <span class="hs-type-badge">${translatedType}</span></div>
+            <div class="hs-name">${escapeHtml(score.name)}</div>
             <div class="hs-meta">
               <span>${dateStr}</span>
+              <span>•</span>
+              <span>${typeDisplay}</span>
               <span>•</span>
               <span>${score.wrong} ${t.errors}</span>
             </div>
@@ -1459,18 +1455,16 @@
 
       // Get current settings
       const typeSelect = document.getElementById('config-mode');
-      const typeKey = typeSelect.value;
+      const typeValue = typeSelect.value;
       const typeText = typeSelect.options[typeSelect.selectedIndex].text;
       
       const baseMin = document.getElementById('config-min').value;
       const baseMax = document.getElementById('config-max').value;
       
       const numSelect = document.getElementById('config-type');
-      const numKey = numSelect.value;
       const numText = numSelect.options[numSelect.selectedIndex].text;
       
       const decSelect = document.getElementById('config-decimal');
-      const decKey = decSelect.value;
       const decText = decSelect.options[decSelect.selectedIndex].text;
 
       document.getElementById('res-set-type').innerText = typeText;
@@ -1484,13 +1478,13 @@
       document.getElementById('perf-start').style.display = 'block';
       document.getElementById('skip-btn').style.display = 'block';
 
-      // Highscore an Server senden
+      // Highscore an PHP-Skript senden
       setTimeout(() => {
         let playerName = localStorage.getItem('prozent_nickname') || "Anonym";
 
         if (!stats.performance.token) {
           console.error("Kein Token vorhanden, Score wird nicht gespeichert.");
-          alert(t.token_error);
+          showAlert(t.token_error);
           return;
         }
 
@@ -1498,10 +1492,10 @@
           name: playerName,
           score: stats.performance.score,
           wrong: stats.performance.wrong,
-          type: typeKey,
+          type: typeValue,
           base: `${baseMin} - ${baseMax}`,
-          num: numKey,
-          dec: decKey,
+          num: numText,
+          dec: decText,
           date: new Date().toISOString(),
           token: stats.performance.token
         };
@@ -1515,7 +1509,7 @@
         .then(data => {
           if (!data.success) {
             console.error('Speichern abgelehnt:', data.error);
-            alert(t.score_rejected + data.error);
+            showAlert(t.score_rejected + data.error);
           } else {
             checkGlobalGlow();
           }
