@@ -31,11 +31,7 @@ Da die App PHP und SQLite nutzt, wird eine entsprechende Serverumgebung benötig
    ```bash
    git clone https://github.com/evahtec-ops/prozenttrainer.git
    ```
-
-2. **Schreibrechte setzen:**
-   Stelle sicher, dass der Webserver Schreibrechte auf das Verzeichnis hat, in dem die SQLite-Datenbank (`highscores.db`) erstellt wird.
-
-3. **Konfiguration:**
+2. **Konfiguration:**
    - Die Datenbank wird beim ersten Aufruf von `get_highscores.php` oder `save_score.php` automatisch erstellt.
    - Passe die Platzhalter im Impressum/Datenschutz in der `index.html` an deine Daten an.
 
