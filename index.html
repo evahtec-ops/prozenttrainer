@@ -468,7 +468,11 @@
 
   <div class="app-container">
     <header class="header">
-      <h1>Prozent Trainer</h1>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="width: 40px;"></div>
+        <h1>Prozent Trainer</h1>
+        <button id="lang-switch" onclick="toggleLanguage()" style="background: var(--surface-light); border: 1px solid var(--border); color: #fff; padding: 4px 8px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 600;">EN</button>
+      </div>
     </header>
 
     <main class="card">
@@ -724,10 +728,307 @@
       <button onclick="closeDatenschutz()" style="position: absolute; top: 24px; right: 24px; background: var(--surface-light); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
       <h2 style="margin-top: 0; margin-bottom: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">Datenschutzerklärung</h2>
       
-     </div> 
+      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">1. Datenschutz auf einen Blick</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+        Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
+      </p>
+
+      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">2. Datenerfassung in dieser App</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+        <strong>Highscore-Daten:</strong> Wenn Sie den Challenge-Modus nutzen, speichern wir den von Ihnen gewählten Nicknamen, Ihre erreichten Punkte, Fehleranzahl, Spieleinstellungen und einen Zeitstempel. Diese Daten werden auf unserem Server in einer Bestenliste (Highscore) veröffentlicht.<br><br>
+        <strong>Lokaler Speicher (Local Storage):</strong> Ihr gewählter Nickname wird lokal in Ihrem Browser gespeichert (Local Storage), damit Sie ihn bei zukünftigen Besuchen nicht erneut eingeben müssen. Diese Daten verlassen Ihren Browser nicht, bis Sie einen Highscore erzielen.
+      </p>
+
+      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">3. Verantwortliche Stelle</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+        Simon Fröhlich<br>
+        Ludwig-Richter-Straße 21<br>
+        09131 Chemnitz<br>
+        E-Mail: si.froehlich@eszc.de
+      </p>
+
+      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">4. Ihre Rechte</h3>
+      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+        Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder Löschung dieser Daten zu verlangen. Hierzu können Sie sich jederzeit an uns wenden.
+      </p>
+    </div>
   </div>
 
   <script>
+    const translations = {
+      de: {
+        title: "Prozent Profi | Rechentrainer",
+        header: "Prozent Trainer",
+        nav_training: "Training",
+        nav_performance: "Challenge",
+        nav_highscores: "Rangliste",
+        stat_time: "Zeit",
+        stat_points: "Punkte",
+        stat_wrong: "Falsch",
+        stat_highscore: "Highscore",
+        stat_correct: "Richtig",
+        perf_start_text: "Löse so viele Aufgaben wie möglich in 60 Sekunden.",
+        logged_in_as: "Eingeloggt als",
+        name_saved: "Name ist fest gespeichert",
+        choose_nickname: "Nickname wählen",
+        nickname_placeholder: "Dein Name...",
+        privacy_accept: "Ich habe die <a href=\"#\" onclick=\"openDatenschutz(); return false;\" style=\"color: var(--info); text-decoration: none;\">Datenschutzerklärung</a> gelesen und akzeptiere sie.",
+        btn_save_nick: "Prüfen & Speichern",
+        btn_start: "Starten",
+        your_result: "Dein Ergebnis",
+        points_reached: "Punkte erreicht",
+        errors: "Fehler",
+        record: "Rekord",
+        used_settings: "Genutzte Einstellungen:",
+        task_type: "Aufgabentyp:",
+        base_value: "Grundwert:",
+        number_type: "Zahlenart:",
+        decimals: "Kommazahlen:",
+        diff_easy: "Leicht",
+        diff_medium: "Mittel",
+        diff_hard: "Schwer",
+        loading: "Lade...",
+        check: "Überprüfen",
+        skip: "Überspringen",
+        feedback_correct: "Richtig!",
+        feedback_wrong: "Falsch. Lösung: ",
+        alltime_highscores: "Allzeit Highscores",
+        filter_mixed: "Gemischt",
+        filter_w: "Prozentwert (W)",
+        filter_g: "Grundwert (G)",
+        filter_p: "Prozentsatz (p)",
+        best_only: "Nur Bestleistung pro Person",
+        loading_highscores: "Lade Highscores...",
+        no_highscores: "Noch keine Highscores vorhanden.",
+        no_highscores_type: "Keine Highscores für diesen Typ.",
+        error_loading_highscores: "Fehler beim Laden der Highscores.",
+        page_of: "Seite {current} von {total}",
+        prev: "Zurück",
+        next: "Weiter",
+        settings: "Einstellungen",
+        challenge_lock_hint: "Im Challenge Modus sind die Prozente nicht veränderbar.",
+        setting_task_type: "Aufgabentyp",
+        setting_base_range: "Grundwert Bereich",
+        setting_number_type: "Zahlenart",
+        type_all: "Alle Zahlen",
+        type_no_zero: "Keine Endnullen",
+        type_with_zero: "Nur Endnullen",
+        setting_decimals: "Kommazahlen",
+        off: "Aus",
+        on: "An",
+        setting_percent_mode: "Prozente Auswahl",
+        custom_percents: "Eigene Prozente",
+        random_percents: "Zufällig 1 - 100%",
+        custom_percents_label: "Eigene Prozente (Kommagetrennt)",
+        impressum: "Impressum",
+        datenschutz: "Datenschutz",
+        points_label: "Punkte",
+        checking: "Prüfe...",
+        privacy_error: "Bitte akzeptiere die Datenschutzerklärung, um fortzufahren.",
+        name_too_short: "Der Name muss mindestens 3 Zeichen lang sein.",
+        name_taken: "Dieser Name ist bereits vergeben. Bitte wähle einen anderen.",
+        token_error: "Fehler: Verbindung zum Server fehlgeschlagen (Anti-Cheat). Dein Score konnte nicht gespeichert werden.",
+        score_rejected: "Score abgelehnt: ",
+        task_w: "Berechne {p}% von {g}",
+        task_g: "{w} sind {p}% von ...?",
+        task_p: "{w} von {g} sind wie viel Prozent?",
+        impressum_title: "Impressum & Rechtliches",
+        datenschutz_title: "Datenschutzerklärung"
+      },
+      en: {
+        title: "Percent Pro | Math Trainer",
+        header: "Percent Trainer",
+        nav_training: "Training",
+        nav_performance: "Challenge",
+        nav_highscores: "Leaderboard",
+        stat_time: "Time",
+        stat_points: "Points",
+        stat_wrong: "Wrong",
+        stat_highscore: "Highscore",
+        stat_correct: "Correct",
+        perf_start_text: "Solve as many tasks as possible in 60 seconds.",
+        logged_in_as: "Logged in as",
+        name_saved: "Name is permanently saved",
+        choose_nickname: "Choose Nickname",
+        nickname_placeholder: "Your name...",
+        privacy_accept: "I have read and accept the <a href=\"#\" onclick=\"openDatenschutz(); return false;\" style=\"color: var(--info); text-decoration: none;\">privacy policy</a>.",
+        btn_save_nick: "Check & Save",
+        btn_start: "Start",
+        your_result: "Your Result",
+        points_reached: "Points reached",
+        errors: "Errors",
+        record: "Record",
+        used_settings: "Used Settings:",
+        task_type: "Task Type:",
+        base_value: "Base Value:",
+        number_type: "Number Type:",
+        decimals: "Decimals:",
+        diff_easy: "Easy",
+        diff_medium: "Medium",
+        diff_hard: "Hard",
+        loading: "Loading...",
+        check: "Check",
+        skip: "Skip",
+        feedback_correct: "Correct!",
+        feedback_wrong: "Wrong. Solution: ",
+        alltime_highscores: "All-time Highscores",
+        filter_mixed: "Mixed",
+        filter_w: "Percentage Value (W)",
+        filter_g: "Base Value (G)",
+        filter_p: "Percentage Rate (p)",
+        best_only: "Best performance per person only",
+        loading_highscores: "Loading Highscores...",
+        no_highscores: "No highscores available yet.",
+        no_highscores_type: "No highscores for this type.",
+        error_loading_highscores: "Error loading highscores.",
+        page_of: "Page {current} of {total}",
+        prev: "Back",
+        next: "Next",
+        settings: "Settings",
+        challenge_lock_hint: "In Challenge mode, percentages cannot be changed.",
+        setting_task_type: "Task Type",
+        setting_base_range: "Base Value Range",
+        setting_number_type: "Number Type",
+        type_all: "All Numbers",
+        type_no_zero: "No Trailing Zeros",
+        type_with_zero: "Only Trailing Zeros",
+        setting_decimals: "Decimals",
+        off: "Off",
+        on: "On",
+        setting_percent_mode: "Percentage Selection",
+        custom_percents: "Custom Percentages",
+        random_percents: "Random 1 - 100%",
+        custom_percents_label: "Custom Percentages (comma-separated)",
+        impressum: "Legal Notice",
+        datenschutz: "Privacy Policy",
+        points_label: "Points",
+        checking: "Checking...",
+        privacy_error: "Please accept the privacy policy to continue.",
+        name_too_short: "The name must be at least 3 characters long.",
+        name_taken: "This name is already taken. Please choose another one.",
+        token_error: "Error: Server connection failed (Anti-Cheat). Your score could not be saved.",
+        score_rejected: "Score rejected: ",
+        task_w: "Calculate {p}% of {g}",
+        task_g: "{w} is {p}% of ...?",
+        task_p: "{w} of {g} is what percentage?",
+        impressum_title: "Legal Notice & Legal Information",
+        datenschutz_title: "Privacy Policy"
+      }
+    };
+
+    let currentLang = localStorage.getItem('prozent_lang') || 'de';
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'de' ? 'en' : 'de';
+      localStorage.setItem('prozent_lang', currentLang);
+      updateLanguageUI();
+    }
+
+    function updateLanguageUI() {
+      const t = translations[currentLang];
+      document.title = t.title;
+      document.querySelector('.header h1').innerText = t.header;
+      document.getElementById('lang-switch').innerText = currentLang === 'de' ? 'EN' : 'DE';
+
+      // Nav
+      document.getElementById('nav-training').innerText = t.nav_training;
+      document.getElementById('nav-performance').innerText = t.nav_performance;
+      document.getElementById('nav-highscores').innerText = t.nav_highscores;
+
+      // Stats Performance
+      document.querySelectorAll('#perf-stats .stat-label')[0].innerText = t.stat_time;
+      document.querySelectorAll('#perf-stats .stat-label')[1].innerText = t.stat_points;
+      document.querySelectorAll('#perf-stats .stat-label')[2].innerText = t.stat_wrong;
+      document.querySelectorAll('#perf-stats .stat-label')[3].innerText = t.stat_highscore;
+
+      // Stats Training
+      const trainStats = document.getElementById('train-stats');
+      trainStats.childNodes[0].textContent = t.stat_correct + ' ';
+      trainStats.childNodes[2].textContent = t.stat_wrong + ' ';
+
+      // Performance Start
+      document.querySelector('#perf-start p').innerText = t.perf_start_text;
+      document.querySelector('#nickname-display div:nth-child(1)').innerText = t.logged_in_as;
+      document.querySelector('#nickname-display div:nth-child(3)').innerText = t.name_saved;
+      document.querySelector('#nickname-input-area div:nth-child(1)').innerText = t.choose_nickname;
+      document.getElementById('nickname-input').placeholder = t.nickname_placeholder;
+      document.querySelector('#nickname-input-area label span').innerHTML = t.privacy_accept;
+      document.getElementById('btn-save-nick').innerText = t.btn_save_nick;
+      document.getElementById('btn-start-challenge').innerText = t.btn_start;
+
+      // Results
+      document.querySelector('#perf-results div:nth-child(1) div:nth-child(1)').innerText = t.your_result;
+      document.querySelector('#perf-results div:nth-child(1) div:nth-child(3)').innerText = t.points_reached;
+      document.querySelector('#perf-results div:nth-child(2) div:nth-child(1) div:nth-child(2)').innerText = t.errors;
+      document.querySelector('#perf-results div:nth-child(2) div:nth-child(2) div:nth-child(2)').innerText = t.record;
+      document.querySelector('#perf-results div:nth-child(3)').innerText = t.used_settings;
+      document.querySelectorAll('#perf-results div:nth-child(4) div span:first-child')[0].innerText = t.task_type;
+      document.querySelectorAll('#perf-results div:nth-child(4) div span:first-child')[1].innerText = t.base_value;
+      document.querySelectorAll('#perf-results div:nth-child(4) div span:first-child')[2].innerText = t.number_type;
+      document.querySelectorAll('#perf-results div:nth-child(4) div span:first-child')[3].innerText = t.decimals;
+
+      // Game
+      document.querySelector('.input-group button.btn-primary').innerText = t.check;
+      document.getElementById('skip-btn').innerText = t.skip;
+
+      // Highscores
+      document.querySelector('#highscores-content h2').innerText = t.alltime_highscores;
+      const typeFilter = document.getElementById('highscore-type-filter');
+      typeFilter.options[0].text = t.filter_mixed;
+      typeFilter.options[1].text = t.filter_w;
+      typeFilter.options[2].text = t.filter_g;
+      typeFilter.options[3].text = t.filter_p;
+      document.querySelector('#highscores-content label span').innerText = t.best_only;
+      document.getElementById('btn-prev-page').innerText = t.prev;
+      document.getElementById('btn-next-page').innerText = t.next;
+
+      // Settings
+      document.querySelector('.settings-card h3').innerText = t.settings;
+      document.getElementById('perf-lock-hint').innerText = t.challenge_lock_hint;
+      document.querySelectorAll('.setting-item label')[0].innerText = t.setting_task_type;
+      const configMode = document.getElementById('config-mode');
+      configMode.options[0].text = t.filter_mixed;
+      configMode.options[1].text = t.filter_w;
+      configMode.options[2].text = t.filter_g;
+      configMode.options[3].text = t.filter_p;
+      document.querySelectorAll('.setting-item label')[1].innerText = t.setting_base_range;
+      document.querySelectorAll('.setting-item label')[2].innerText = t.setting_number_type;
+      const configType = document.getElementById('config-type');
+      configType.options[0].text = t.type_all;
+      configType.options[1].text = t.type_no_zero;
+      configType.options[2].text = t.type_with_zero;
+      document.querySelectorAll('.setting-item label')[3].innerText = t.setting_decimals;
+      const configDecimal = document.getElementById('config-decimal');
+      configDecimal.options[0].text = t.off;
+      configDecimal.options[1].text = t.on;
+      document.querySelectorAll('.setting-item label')[4].innerText = t.setting_percent_mode;
+      const configPercentMode = document.getElementById('config-percent-mode');
+      configPercentMode.options[0].text = t.custom_percents;
+      configPercentMode.options[1].text = t.random_percents;
+      document.querySelectorAll('.setting-item label')[5].innerText = t.custom_percents_label;
+
+      // Footer
+      document.querySelectorAll('.footer a')[0].innerText = t.impressum;
+      document.querySelectorAll('.footer a')[1].innerText = t.datenschutz;
+
+      // Modals
+      document.querySelector('#impressum-modal h2').innerText = t.impressum_title;
+      document.querySelector('#datenschutz-modal h2').innerText = t.datenschutz_title;
+
+      // Re-render dynamic parts
+      if (appMode === 'highscores') loadHighscores();
+      if (currentTask) {
+        // Update current task text
+        const fmt = (num) => num.toString().replace('.', currentLang === 'de' ? ',' : '.');
+        let text = '';
+        if (currentTask.mode === 'W') text = t.task_w.replace('{p}', fmt(currentTask.p)).replace('{g}', fmt(currentTask.g));
+        if (currentTask.mode === 'G') text = t.task_g.replace('{w}', fmt(currentTask.w)).replace('{p}', fmt(currentTask.p));
+        if (currentTask.mode === 'P') text = t.task_p.replace('{w}', fmt(currentTask.w)).replace('{g}', fmt(currentTask.g));
+        document.getElementById('task-text').innerText = text;
+        updateDifficultyBadge(currentTask.g, currentTask.p, currentTask.mode, currentTask.result);
+      }
+    }
+
     let appMode = 'training';
     let isRunning = false;
     let isProcessing = false;
@@ -745,6 +1046,7 @@
       toggleCustomP();
       updateNicknameUI();
       checkGlobalGlow();
+      updateLanguageUI();
     };
 
     function checkGlobalGlow() {
@@ -819,24 +1121,25 @@
     }
 
     function saveNickname() {
+      const t = translations[currentLang];
       const input = document.getElementById('nickname-input').value.trim();
       const privacyCheck = document.getElementById('privacy-check').checked;
       const errorEl = document.getElementById('nickname-error');
       const btn = document.getElementById('btn-save-nick');
       
       if (!privacyCheck) {
-        errorEl.innerText = 'Bitte akzeptiere die Datenschutzerklärung, um fortzufahren.';
+        errorEl.innerText = t.privacy_error;
         errorEl.style.display = 'block';
         return;
       }
 
       if (input.length < 3) {
-        errorEl.innerText = 'Der Name muss mindestens 3 Zeichen lang sein.';
+        errorEl.innerText = t.name_too_short;
         errorEl.style.display = 'block';
         return;
       }
       
-      btn.innerText = 'Prüfe...';
+      btn.innerText = t.checking;
       btn.disabled = true;
       
       fetch('highscores.txt?t=' + new Date().getTime())
@@ -848,21 +1151,21 @@
           if (!Array.isArray(data)) data = [];
           const isTaken = data.some(score => score.name.toLowerCase() === input.toLowerCase());
           if (isTaken) {
-            errorEl.innerText = 'Dieser Name ist bereits vergeben. Bitte wähle einen anderen.';
+            errorEl.innerText = t.name_taken;
             errorEl.style.display = 'block';
-            btn.innerText = 'Prüfen & Speichern';
+            btn.innerText = t.btn_save_nick;
             btn.disabled = false;
           } else {
             localStorage.setItem('prozent_nickname', input);
             updateNicknameUI();
-            btn.innerText = 'Prüfen & Speichern';
+            btn.innerText = t.btn_save_nick;
             btn.disabled = false;
           }
         })
         .catch(err => {
           localStorage.setItem('prozent_nickname', input);
           updateNicknameUI();
-          btn.innerText = 'Prüfen & Speichern';
+          btn.innerText = t.btn_save_nick;
           btn.disabled = false;
         });
     }
@@ -915,9 +1218,10 @@
     const itemsPerPage = 10;
 
     function loadHighscores() {
+      const t = translations[currentLang];
       const listContainer = document.getElementById('highscores-list');
       const paginationControls = document.getElementById('pagination-controls');
-      listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">Lade Highscores...</div>';
+      listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.loading_highscores}</div>`;
       if (paginationControls) paginationControls.style.display = 'none';
       
       const filterType = document.getElementById('highscore-type-filter').value;
@@ -930,11 +1234,11 @@
         })
         .then(data => {
           if (!data || data.length === 0) {
-            listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">Noch keine Highscores vorhanden.</div>';
+            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.no_highscores}</div>`;
             return;
           }
           
-          let filtered = data.filter(score => score.type === filterType);
+          let filtered = data.filter(score => score.type === filterType || (filterType === 'Gemischt' && score.type === 'Mixed'));
 
           if (bestOnly) {
             const bestScores = {};
@@ -949,7 +1253,7 @@
           currentFilteredScores = filtered;
 
           if (currentFilteredScores.length === 0) {
-            listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">Keine Highscores für diesen Typ.</div>';
+            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.no_highscores_type}</div>`;
             return;
           }
 
@@ -958,11 +1262,12 @@
         })
         .catch(err => {
           console.error('Fehler beim Laden der Highscores:', err);
-          listContainer.innerHTML = '<div style="text-align:center; padding: 40px; color: var(--text-muted);">Fehler beim Laden der Highscores.</div>';
+          listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.error_loading_highscores}</div>`;
         });
     }
 
     function renderHighscoresPage() {
+      const t = translations[currentLang];
       const listContainer = document.getElementById('highscores-list');
       const paginationControls = document.getElementById('pagination-controls');
       listContainer.innerHTML = '';
@@ -996,7 +1301,7 @@
         const dateObj = score.date ? new Date(score.date) : null;
         let dateStr = shortDate;
         if (dateObj && !isNaN(dateObj.getTime())) {
-          dateStr = dateObj.toLocaleDateString('de-DE');
+          dateStr = dateObj.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US');
         }
 
         item.innerHTML = `
@@ -1006,12 +1311,12 @@
             <div class="hs-meta">
               <span>${dateStr}</span>
               <span>•</span>
-              <span>${score.wrong} Fehler</span>
+              <span>${score.wrong} ${t.errors}</span>
             </div>
           </div>
           <div class="hs-score-box">
             <div class="hs-points">${score.score}</div>
-            <div class="hs-label">Punkte</div>
+            <div class="hs-label">${t.points_label}</div>
           </div>
         `;
         listContainer.appendChild(item);
@@ -1019,7 +1324,7 @@
 
       if (totalPages > 1) {
         paginationControls.style.display = 'flex';
-        document.getElementById('page-indicator').innerText = `Seite ${currentPage} von ${totalPages}`;
+        document.getElementById('page-indicator').innerText = t.page_of.replace('{current}', currentPage).replace('{total}', totalPages);
         
         const btnPrev = document.getElementById('btn-prev-page');
         const btnNext = document.getElementById('btn-next-page');
@@ -1091,6 +1396,7 @@
     }
 
     function endPerformanceMode() {
+      const t = translations[currentLang];
       isRunning = false;
       clearInterval(timerInterval);
       
@@ -1135,7 +1441,7 @@
 
         if (!stats.performance.token) {
           console.error("Kein Token vorhanden, Score wird nicht gespeichert.");
-          alert("Fehler: Verbindung zum Server fehlgeschlagen (Anti-Cheat). Dein Score konnte nicht gespeichert werden.");
+          alert(t.token_error);
           return;
         }
 
@@ -1143,7 +1449,7 @@
           name: playerName,
           score: stats.performance.score,
           wrong: stats.performance.wrong,
-          type: typeText,
+          type: currentLang === 'en' ? (typeText === t.filter_mixed ? 'Mixed' : typeText) : typeText,
           base: `${baseMin} - ${baseMax}`,
           num: numText,
           dec: decText,
@@ -1160,7 +1466,7 @@
         .then(data => {
           if (!data.success) {
             console.error('Speichern abgelehnt:', data.error);
-            alert('Score abgelehnt: ' + data.error);
+            alert(t.score_rejected + data.error);
           } else {
             checkGlobalGlow();
           }
@@ -1170,6 +1476,7 @@
     }
 
     function generateNewTask() {
+      const t = translations[currentLang];
       clearTimeout(taskTimeout);
       isProcessing = false;
 
@@ -1226,11 +1533,11 @@
 
       currentTask = { mode, g, p, w, result };
 
-      const fmt = (num) => num.toString().replace('.', ',');
+      const fmt = (num) => num.toString().replace('.', currentLang === 'de' ? ',' : '.');
       let text = '';
-      if (mode === 'W') text = `Berechne ${fmt(p)}% von ${fmt(g)}`;
-      if (mode === 'G') text = `${fmt(w)} sind ${fmt(p)}% von ...?`;
-      if (mode === 'P') text = `${fmt(w)} von ${fmt(g)} sind wie viel Prozent?`;
+      if (mode === 'W') text = t.task_w.replace('{p}', fmt(p)).replace('{g}', fmt(g));
+      if (mode === 'G') text = t.task_g.replace('{w}', fmt(w)).replace('{p}', fmt(p));
+      if (mode === 'P') text = t.task_p.replace('{w}', fmt(w)).replace('{g}', fmt(g));
 
       document.getElementById('task-text').innerText = text;
       document.getElementById('answer-input').value = '';
@@ -1242,6 +1549,7 @@
     }
 
     function updateDifficultyBadge(g, p, mode, res) {
+      const t = translations[currentLang];
       let score = 0;
       if (p % 10 !== 0) score += 3;
       if (g % 10 !== 0) score += 2;
@@ -1250,18 +1558,19 @@
 
       const badge = document.getElementById('difficulty-badge');
       if (score > 7) {
-        badge.innerText = 'Schwer';
+        badge.innerText = t.diff_hard;
         badge.className = 'difficulty-badge diff-schwer';
       } else if (score > 3) {
-        badge.innerText = 'Mittel';
+        badge.innerText = t.diff_medium;
         badge.className = 'difficulty-badge diff-mittel';
       } else {
-        badge.innerText = 'Leicht';
+        badge.innerText = t.diff_easy;
         badge.className = 'difficulty-badge diff-leicht';
       }
     }
 
     function checkAnswer() {
+      const t = translations[currentLang];
       if (isProcessing || !currentTask) return;
 
       let rawInput = document.getElementById('answer-input').value;
@@ -1274,7 +1583,7 @@
       const isCorrect = Math.abs(input - currentTask.result) < 0.01;
 
       if (isCorrect) {
-        feedback.innerText = 'Richtig!';
+        feedback.innerText = t.feedback_correct;
         feedback.style.color = 'var(--success)';
         
         if (appMode === 'training') {
@@ -1287,8 +1596,8 @@
           generateNewTask();
         }
       } else {
-        const fmt = (num) => num.toString().replace('.', ',');
-        feedback.innerText = `Falsch. Lösung: ${fmt(currentTask.result)}`;
+        const fmt = (num) => num.toString().replace('.', currentLang === 'de' ? ',' : '.');
+        feedback.innerText = `${t.feedback_wrong}${fmt(currentTask.result)}`;
         feedback.style.color = 'var(--error)';
         document.getElementById('answer-input').classList.add('shake');
         setTimeout(() => document.getElementById('answer-input').classList.remove('shake'), 400);
