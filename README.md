@@ -47,4 +47,4 @@ Da die App PHP und SQLite nutzt, wird eine entsprechende Serverumgebung benötig
 Dieses Projekt ist unter der MIT-Lizenz lizenziert. Siehe `LICENSE` für Details.
 
 ---
-Entwickelt von [Simon Fröhlich](https://github.com/simonfroehlich) & Team.
+
