@@ -399,6 +399,19 @@
       font-weight: 700;
     }
 
+    .hs-type-badge {
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--surface-light);
+      color: var(--text-muted);
+      margin-left: 8px;
+      border: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
     /* Top 3 Highlights */
     @keyframes shine {
       0% { background-position: -200% center; }
@@ -587,10 +600,10 @@
         
         <div style="margin-bottom: 16px; text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center;">
           <select id="highscore-type-filter" onchange="loadHighscores()" style="padding: 10px 16px; border-radius: 12px; background: #222; color: #fff; border: 1px solid #444; font-size: 14px; width: 100%; max-width: 300px;">
-            <option value="Gemischt">Gemischt</option>
-            <option value="Prozentwert (W)">Prozentwert (W)</option>
-            <option value="Grundwert (G)">Grundwert (G)</option>
-            <option value="Prozentsatz (p)">Prozentsatz (p)</option>
+            <option value="mixed">Gemischt</option>
+            <option value="W">Prozentwert (W)</option>
+            <option value="G">Grundwert (G)</option>
+            <option value="P">Prozentsatz (p)</option>
           </select>
 
           <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); cursor: pointer; user-select: none; background: var(--surface-light); padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border);">
@@ -677,82 +690,92 @@
   </div>
 
   <!-- Impressum Modal -->
-  <div id="impressum-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);">
-    <div style="background: var(--surface); max-width: 600px; margin: 20px auto; padding: 32px; border-radius: 24px; border: 1px solid var(--border); position: relative; color: var(--text-main);">
-      <button onclick="closeImpressum()" style="position: absolute; top: 24px; right: 24px; background: var(--surface-light); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
-      <h2 style="margin-top: 0; margin-bottom: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">Impressum & Rechtliches</h2>
-      
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">🏫 Angaben gemäß § 5 TMG</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        <strong>Diensteanbieter:</strong><br>Freier Evangelischer Schulverein Chemnitz e.V.<br><br>
-        <strong>Träger der Schule:</strong><br>Evangelische Schulgemeinschaft Chemnitz (ESZC)<br><br>
-        <strong>Adresse:</strong><br>Ludwig-Richter-Straße 21, 09131 Chemnitz<br><br>
-        <strong>Vertreten durch:</strong><br>Schulleitung / Vorstand des Vereins
-      </p>
+<div id="impressum-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);">
+  <div style="background: var(--surface); max-width: 600px; margin: 20px auto; padding: 32px; border-radius: 24px; border: 1px solid var(--border); position: relative; color: var(--text-main);">
+    
+    <button onclick="closeImpressum()" style="position: absolute; top: 24px; right: 24px; background: var(--surface-light); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
+    
+    <h2 style="margin-top: 0; margin-bottom: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">Impressum & Rechtliches</h2>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">👤 Projektleitung</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        <strong>Projekt:</strong><br>Prozent Trainer (Rechentrainer)<br><br>
-        <strong>Leitung:</strong><br>Simon Fröhlich
-      </p>
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">🏫 Angaben gemäß § 5 TMG</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      <strong>Diensteanbieter:</strong><br>{{SERVICE_PROVIDER_NAME}}<br><br>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">📞 Kontakt</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        <strong>Telefon:</strong> 0371 / 4443380<br>
-        <strong>E-Mail:</strong> si.froehlich@eszc.de
-      </p>
+      <strong>Träger der Schule:</strong><br>{{SCHOOL_ORGANIZATION_NAME}}<br><br>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">✍️ Verantwortlich für den Inhalt</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        Gemäß § 18 Abs. 2 MStV:<br>
-        Simon Fröhlich<br>
-        Ludwig-Richter-Straße 21<br>
-        09131 Chemnitz
-      </p>
+      <strong>Adresse:</strong><br>{{ADDRESS_STREET}}, {{ADDRESS_POSTAL}} {{ADDRESS_CITY}}<br><br>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">⚖️ Haftungsausschluss</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        <strong>Haftung für Inhalte</strong><br>
-        Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.<br><br>
-        <strong>Haftung für Links</strong><br>
-        Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.<br><br>
-        <strong>Urheberrecht</strong><br>
-        Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
-      </p>
-    </div>
+      <strong>Vertreten durch:</strong><br>{{REPRESENTATIVE_NAME_OR_ROLE}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">👤 Projektleitung</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      <strong>Projekt:</strong><br>{{PROJECT_NAME}}<br><br>
+      <strong>Leitung:</strong><br>{{PROJECT_LEAD_NAME}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">📞 Kontakt</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      <strong>Telefon:</strong> {{PHONE_NUMBER}}<br>
+      <strong>E-Mail:</strong> {{EMAIL_ADDRESS}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">✍️ Verantwortlich für den Inhalt</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      Gemäß § 18 Abs. 2 MStV:<br>
+      {{RESPONSIBLE_PERSON_NAME}}<br>
+      {{ADDRESS_STREET}}<br>
+      {{ADDRESS_POSTAL}} {{ADDRESS_CITY}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">⚖️ Haftungsausschluss</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      <strong>Haftung für Inhalte</strong><br>
+      {{LIABILITY_CONTENT_TEXT}}<br><br>
+
+      <strong>Haftung für Links</strong><br>
+      {{LIABILITY_LINKS_TEXT}}<br><br>
+
+      <strong>Urheberrecht</strong><br>
+      {{COPYRIGHT_TEXT}}
+    </p>
+
   </div>
+</div>
 
-  <!-- Datenschutz Modal -->
-  <div id="datenschutz-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);">
-    <div style="background: var(--surface); max-width: 600px; margin: 20px auto; padding: 32px; border-radius: 24px; border: 1px solid var(--border); position: relative; color: var(--text-main);">
-      <button onclick="closeDatenschutz()" style="position: absolute; top: 24px; right: 24px; background: var(--surface-light); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
-      <h2 style="margin-top: 0; margin-bottom: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">Datenschutzerklärung</h2>
-      
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">1. Datenschutz auf einen Blick</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung.
-      </p>
+<!-- Datenschutz Modal -->
+<div id="datenschutz-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; backdrop-filter: blur(4px);">
+  <div style="background: var(--surface); max-width: 600px; margin: 20px auto; padding: 32px; border-radius: 24px; border: 1px solid var(--border); position: relative; color: var(--text-main);">
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">2. Datenerfassung in dieser App</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        <strong>Highscore-Daten:</strong> Wenn Sie den Challenge-Modus nutzen, speichern wir den von Ihnen gewählten Nicknamen, Ihre erreichten Punkte, Fehleranzahl, Spieleinstellungen und einen Zeitstempel. Diese Daten werden auf unserem Server in einer Bestenliste (Highscore) veröffentlicht.<br><br>
-        <strong>Lokaler Speicher (Local Storage):</strong> Ihr gewählter Nickname wird lokal in Ihrem Browser gespeichert (Local Storage), damit Sie ihn bei zukünftigen Besuchen nicht erneut eingeben müssen. Diese Daten verlassen Ihren Browser nicht, bis Sie einen Highscore erzielen.
-      </p>
+    <button onclick="closeDatenschutz()" style="position: absolute; top: 24px; right: 24px; background: var(--surface-light); border: 1px solid var(--border); color: #fff; width: 32px; height: 32px; border-radius: 16px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">&times;</button>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">3. Verantwortliche Stelle</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        Simon Fröhlich<br>
-        Ludwig-Richter-Straße 21<br>
-        09131 Chemnitz<br>
-        E-Mail: si.froehlich@eszc.de
-      </p>
+    <h2 style="margin-top: 0; margin-bottom: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">Datenschutzerklärung</h2>
 
-      <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">4. Ihre Rechte</h3>
-      <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-        Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung oder Löschung dieser Daten zu verlangen. Hierzu können Sie sich jederzeit an uns wenden.
-      </p>
-    </div>
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">1. Datenschutz auf einen Blick</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      {{DATA_PROTECTION_OVERVIEW}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">2. Datenerfassung in dieser App</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      {{DATA_COLLECTION_TEXT}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">3. Verantwortliche Stelle</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      {{RESPONSIBLE_AUTHORITY_NAME}}<br>
+      {{ADDRESS_STREET}}<br>
+      {{ADDRESS_POSTAL}} {{ADDRESS_CITY}}<br>
+      E-Mail: {{EMAIL_ADDRESS}}
+    </p>
+
+    <h3 style="font-size: 14px; margin-top: 24px; margin-bottom: 8px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em;">4. Ihre Rechte</h3>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+      {{USER_RIGHTS_TEXT}}
+    </p>
+
   </div>
+</div>
 
   <script>
     const translations = {
@@ -943,8 +966,8 @@
 
       // Stats Training
       const trainStats = document.getElementById('train-stats');
-      trainStats.childNodes[0].textContent = t.stat_correct + ' ';
-      trainStats.childNodes[2].textContent = t.stat_wrong + ' ';
+      trainStats.children[0].childNodes[0].textContent = t.stat_correct + ' ';
+      trainStats.children[1].childNodes[0].textContent = t.stat_wrong + ' ';
 
       // Performance Start
       document.querySelector('#perf-start p').innerText = t.perf_start_text;
@@ -1022,8 +1045,8 @@
         const fmt = (num) => num.toString().replace('.', currentLang === 'de' ? ',' : '.');
         let text = '';
         if (currentTask.mode === 'W') text = t.task_w.replace('{p}', fmt(currentTask.p)).replace('{g}', fmt(currentTask.g));
-        if (currentTask.mode === 'G') text = t.task_g.replace('{w}', fmt(currentTask.w)).replace('{p}', fmt(currentTask.p));
-        if (currentTask.mode === 'P') text = t.task_p.replace('{w}', fmt(currentTask.w)).replace('{g}', fmt(currentTask.g));
+        else if (currentTask.mode === 'G') text = t.task_g.replace('{w}', fmt(currentTask.w)).replace('{p}', fmt(currentTask.p));
+        else if (currentTask.mode === 'P') text = t.task_p.replace('{w}', fmt(currentTask.w)).replace('{g}', fmt(currentTask.g));
         document.getElementById('task-text').innerText = text;
         updateDifficultyBadge(currentTask.g, currentTask.p, currentTask.mode, currentTask.result);
       }
@@ -1061,7 +1084,7 @@
           if (!Array.isArray(data)) return;
           
           // Check top 3 in "Gemischt" as the default "general" leaderboard
-          let mixedScores = data.filter(s => s.type === 'Gemischt');
+          let mixedScores = data.filter(s => s.type === 'mixed' || s.type === 'Gemischt' || s.type === 'Mixed');
           
           if (bestOnly) {
             const bestScores = {};
@@ -1234,11 +1257,27 @@
         })
         .then(data => {
           if (!data || data.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.no_highscores}</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-muted);">${t.loading_highscores}</div>`;
             return;
           }
           
-          let filtered = data.filter(score => score.type === filterType || (filterType === 'Gemischt' && score.type === 'Mixed'));
+          let filtered = data.filter(score => {
+            // Handle legacy German strings and new keys
+            const type = score.type;
+            if (filterType === 'mixed') {
+              return type === 'mixed' || type === 'Gemischt' || type === 'Mixed';
+            }
+            if (filterType === 'W') {
+              return type === 'W' || type === 'Prozentwert (W)' || type === 'Percentage Value (W)';
+            }
+            if (filterType === 'G') {
+              return type === 'G' || type === 'Grundwert (G)' || type === 'Base Value (G)';
+            }
+            if (filterType === 'P') {
+              return type === 'P' || type === 'Prozentsatz (p)' || type === 'Percentage Rate (p)';
+            }
+            return false;
+          });
 
           if (bestOnly) {
             const bestScores = {};
@@ -1304,10 +1343,17 @@
           dateStr = dateObj.toLocaleDateString(currentLang === 'de' ? 'de-DE' : 'en-US');
         }
 
+        const typeKey = score.type;
+        let translatedType = typeKey;
+        if (typeKey === 'mixed' || typeKey === 'Gemischt' || typeKey === 'Mixed') translatedType = t.filter_mixed;
+        else if (typeKey === 'W' || typeKey === 'Prozentwert (W)' || typeKey === 'Percentage Value (W)') translatedType = t.filter_w;
+        else if (typeKey === 'G' || typeKey === 'Grundwert (G)' || typeKey === 'Base Value (G)') translatedType = t.filter_g;
+        else if (typeKey === 'P' || typeKey === 'Prozentsatz (p)' || typeKey === 'Percentage Rate (p)') translatedType = t.filter_p;
+
         item.innerHTML = `
           <div class="hs-rank-circle">${globalRank}</div>
           <div class="hs-info">
-            <div class="hs-name">${escapeHtml(score.name)}</div>
+            <div class="hs-name">${escapeHtml(score.name)} <span class="hs-type-badge">${translatedType}</span></div>
             <div class="hs-meta">
               <span>${dateStr}</span>
               <span>•</span>
@@ -1413,15 +1459,18 @@
 
       // Get current settings
       const typeSelect = document.getElementById('config-mode');
+      const typeKey = typeSelect.value;
       const typeText = typeSelect.options[typeSelect.selectedIndex].text;
       
       const baseMin = document.getElementById('config-min').value;
       const baseMax = document.getElementById('config-max').value;
       
       const numSelect = document.getElementById('config-type');
+      const numKey = numSelect.value;
       const numText = numSelect.options[numSelect.selectedIndex].text;
       
       const decSelect = document.getElementById('config-decimal');
+      const decKey = decSelect.value;
       const decText = decSelect.options[decSelect.selectedIndex].text;
 
       document.getElementById('res-set-type').innerText = typeText;
@@ -1435,7 +1484,7 @@
       document.getElementById('perf-start').style.display = 'block';
       document.getElementById('skip-btn').style.display = 'block';
 
-      // Highscore an PHP-Skript senden
+      // Highscore an Server senden
       setTimeout(() => {
         let playerName = localStorage.getItem('prozent_nickname') || "Anonym";
 
@@ -1449,10 +1498,10 @@
           name: playerName,
           score: stats.performance.score,
           wrong: stats.performance.wrong,
-          type: currentLang === 'en' ? (typeText === t.filter_mixed ? 'Mixed' : typeText) : typeText,
+          type: typeKey,
           base: `${baseMin} - ${baseMax}`,
-          num: numText,
-          dec: decText,
+          num: numKey,
+          dec: decKey,
           date: new Date().toISOString(),
           token: stats.performance.token
         };
