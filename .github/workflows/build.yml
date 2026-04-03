@@ -3,7 +3,6 @@ name: Build Check
 on:
   push:
     branches: [ "main" ]
-  pull_request:
 
 jobs:
   build:
@@ -13,7 +12,18 @@ jobs:
       - name: Repo auschecken
         uses: actions/checkout@v4
 
-      - name: Check files
+      - name: Check index.html existiert
         run: |
-          echo "Build erfolgreich 🎉"
-          ls -la
+          if [ ! -f index.html ]; then
+            echo "❌ index.html fehlt!"
+            exit 1
+          fi
+
+      - name: Check wichtige Dateien
+        run: |
+          test -f index.html
+          test -f highscores.php
+          test -f save_score.php
+
+      - name: Erfolg
+        run: echo "✅ Build erfolgreich"
