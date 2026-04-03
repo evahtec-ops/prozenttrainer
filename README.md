@@ -2,7 +2,7 @@
 
 Ein moderner, webbasierter Rechentrainer für Prozentrechnung. Entwickelt für Schüler und Mathe-Begeisterte, um die Sicherheit im Umgang mit Prozentwert (W), Grundwert (G) und Prozentsatz (p) zu verbessern.
 
-![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Build](https://github.com/evahtec-ops/prozenttrainer/actions/workflows/build.yml/badge.svg)
 ## 🚀 Live Demo
