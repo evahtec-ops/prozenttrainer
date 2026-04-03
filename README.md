@@ -4,7 +4,7 @@ Ein moderner, webbasierter Rechentrainer für Prozentrechnung. Entwickelt für S
 
 ![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Build](https://github.com/evahtec-ops/prozenttrainer/actions/workflows/main.yml/badge.svg)## 🚀 Live Demo
+## 🚀 Live Demo
 👉 https://evahtec-ops.github.io/prozenttrainer/
 
 ![Live](https://img.shields.io/badge/status-live-brightgreen)
