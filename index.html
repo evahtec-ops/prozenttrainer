@@ -678,10 +678,15 @@
 
       <!-- Game -->
       <div id="game-content">
-        <div class="difficulty-indicator">
-          <span id="difficulty-label">Adaptive Schwierigkeit</span>
-          <div class="difficulty-bar">
-            <div id="difficulty-progress" class="difficulty-progress" style="width: 50%;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div id="difficulty-indicator-area" class="difficulty-indicator" style="margin-bottom: 0;">
+            <span id="difficulty-label">Adaptive Schwierigkeit</span>
+            <div class="difficulty-bar" style="width: 100px;">
+              <div id="difficulty-progress" class="difficulty-progress" style="width: 50%;"></div>
+            </div>
+          </div>
+          <div id="survival-lives" style="display: none; font-size: 14px; font-weight: 700; color: var(--error);">
+            ❤️❤️❤️
           </div>
         </div>
 
@@ -697,6 +702,11 @@
         </div>
 
         <div id="feedback" class="feedback"></div>
+
+        <div id="explanation-area" style="display: none; margin-top: 16px; padding: 16px; background: var(--surface-light); border-radius: 12px; border: 1px solid var(--info); font-size: 13px; line-height: 1.5; color: var(--text-main);">
+          <div id="explanation-text"></div>
+        </div>
+        <button id="btn-how-to" onclick="showExplanation()" style="display: none; margin: 10px auto; background: none; border: none; color: var(--info); font-size: 12px; cursor: pointer; text-decoration: underline;">Wie rechne ich das?</button>
 
         <div id="achievements-section" style="border-top: 1px solid var(--border); padding-top: 24px; margin-top: 24px;">
           <h3 id="achievements-title" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); text-align: center; margin-bottom: 16px;">Erfolge</h3>
@@ -797,6 +807,44 @@
       <div class="setting-item" id="custom-p-container">
         <label>Eigene Prozente (Kommagetrennt)</label>
         <textarea id="config-custom-p" style="height: 50px;">1,5,10,20,25,30,40,50,60,70,75,80,90,99,110</textarea>
+      </div>
+
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+        <div class="setting-item">
+          <label>Fokus-Modus (Schwächen trainieren)</label>
+          <select id="config-focus">
+            <option value="no">Aus</option>
+            <option value="yes">An</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Schritt-für-Schritt Erklärungen</label>
+          <select id="config-step">
+            <option value="no">Aus</option>
+            <option value="yes">An</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Survival-Modus (3 Leben)</label>
+          <select id="config-survival">
+            <option value="no">Aus</option>
+            <option value="yes">An</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Adaptive Schwierigkeit</label>
+          <select id="config-adaptive">
+            <option value="no">Aus</option>
+            <option value="yes" selected>An</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Erfolge anzeigen</label>
+          <select id="config-show-ach" onchange="toggleAchievementsUI()">
+            <option value="no">Aus</option>
+            <option value="yes" selected>An</option>
+          </select>
+        </div>
       </div>
     </section>
 
@@ -1009,7 +1057,18 @@
         ach_perfect_name: "Perfektionist",
         ach_perfect_desc: "50 richtige Antworten insgesamt",
         ach_persistent_name: "Dauerläufer",
-        ach_persistent_desc: "100 richtige Antworten insgesamt"
+        ach_persistent_desc: "100 richtige Antworten insgesamt",
+        setting_focus_mode: "Fokus-Modus (Schwächen trainieren)",
+        setting_step_by_step: "Schritt-für-Schritt Erklärungen",
+        setting_survival_mode: "Survival-Modus (3 Leben)",
+        setting_adaptive_difficulty: "Adaptive Schwierigkeit",
+        setting_achievements: "Erfolge anzeigen",
+        how_to_calculate: "Wie rechne ich das?",
+        explanation_w: "Rechenweg: W = (G * p) / 100. Multipliziere den Grundwert mit dem Prozentsatz und teile durch 100.",
+        explanation_g: "Rechenweg: G = (W * 100) / p. Multipliziere den Prozentwert mit 100 und teile durch den Prozentsatz.",
+        explanation_p: "Rechenweg: p = (W * 100) / G. Multipliziere den Prozentwert mit 100 und teile durch den Grundwert.",
+        lives: "Leben",
+        game_over_survival: "Game Over! Du hast alle Leben verloren."
       },
       en: {
         title: "Percent Pro | Math Trainer",
@@ -1105,7 +1164,18 @@
         ach_perfect_name: "Perfectionist",
         ach_perfect_desc: "50 correct answers total",
         ach_persistent_name: "Marathoner",
-        ach_persistent_desc: "100 correct answers total"
+        ach_persistent_desc: "100 correct answers total",
+        setting_focus_mode: "Focus Mode (Target Weak Points)",
+        setting_step_by_step: "Step-by-Step Explanations",
+        setting_survival_mode: "Survival Mode (3 Lives)",
+        setting_adaptive_difficulty: "Adaptive Difficulty",
+        setting_achievements: "Show Achievements",
+        how_to_calculate: "How to calculate this?",
+        explanation_w: "Formula: W = (G * p) / 100. Multiply base value by percentage and divide by 100.",
+        explanation_g: "Formula: G = (W * 100) / p. Multiply percentage value by 100 and divide by percentage rate.",
+        explanation_p: "Formula: p = (W * 100) / G. Multiply percentage value by 100 and divide by base value.",
+        lives: "Lives",
+        game_over_survival: "Game Over! You lost all your lives."
       }
     };
 
@@ -1214,6 +1284,23 @@
       configPercentMode.options[1].text = t.random_percents;
       document.querySelectorAll('.setting-item label')[5].innerText = t.custom_percents_label;
 
+      // Advanced Settings
+      document.querySelectorAll('.setting-item label')[6].innerText = t.setting_focus_mode;
+      document.querySelectorAll('.setting-item label')[7].innerText = t.setting_step_by_step;
+      document.querySelectorAll('.setting-item label')[8].innerText = t.setting_survival_mode;
+      document.querySelectorAll('.setting-item label')[9].innerText = t.setting_adaptive_difficulty;
+      document.querySelectorAll('.setting-item label')[10].innerText = t.setting_achievements;
+
+      const selects = document.querySelectorAll('.setting-item select');
+      // Update on/off options for new toggles
+      for (let i = 6; i <= 10; i++) {
+        const sel = document.getElementById(['config-focus', 'config-step', 'config-survival', 'config-adaptive', 'config-show-ach'][i-6]);
+        if (sel) {
+          sel.options[0].text = t.off;
+          sel.options[1].text = t.on;
+        }
+      }
+
       // Footer
       document.querySelectorAll('.footer a')[0].innerText = t.impressum;
       document.querySelectorAll('.footer a')[1].innerText = t.datenschutz;
@@ -1245,7 +1332,8 @@
 
     let stats = {
       training: { correct: 0, wrong: 0 },
-      performance: { score: 0, wrong: 0, highscore: parseInt(localStorage.getItem('prozent_highscore')) || 0, timeLeft: 60, token: null }
+      performance: { score: 0, wrong: 0, highscore: parseInt(localStorage.getItem('prozent_highscore')) || 0, timeLeft: 60, token: null },
+      errorsPerMode: JSON.parse(localStorage.getItem('prozent_errors_mode') || '{"W":0,"G":0,"P":0}')
     };
 
     let streak = 0;
@@ -1254,6 +1342,7 @@
     let difficultyFactor = 0.5; // 0 to 1
     let unlockedAchievements = JSON.parse(localStorage.getItem('prozent_achievements') || '[]');
     let lastAnswerTime = 0;
+    let lives = 3;
 
     window.onload = () => {
       setAppMode('training');
@@ -1263,6 +1352,7 @@
       updateLanguageUI();
       updateAchievementsUI();
       updateDifficultyUI();
+      toggleAchievementsUI();
     };
 
     function checkGlobalGlow() {
@@ -1377,9 +1467,42 @@
 
     function updateDifficultyUI() {
       const progress = document.getElementById('difficulty-progress');
+      const isAdaptive = document.getElementById('config-adaptive').value === 'yes';
+      document.getElementById('difficulty-indicator-area').style.display = isAdaptive ? 'flex' : 'none';
       if (progress) {
         progress.style.width = (difficultyFactor * 100) + '%';
       }
+    }
+
+    function updateLivesUI() {
+      const el = document.getElementById('survival-lives');
+      const isSurvival = document.getElementById('config-survival').value === 'yes';
+      if (isSurvival && appMode === 'performance' && isRunning) {
+        el.style.display = 'block';
+        el.innerText = '❤️'.repeat(lives);
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    function toggleAchievementsUI() {
+      const show = document.getElementById('config-show-ach').value === 'yes';
+      document.getElementById('achievements-section').style.display = show ? 'block' : 'none';
+    }
+
+    function showExplanation() {
+      const t = translations[currentLang];
+      const area = document.getElementById('explanation-area');
+      const text = document.getElementById('explanation-text');
+      
+      let explanation = '';
+      if (currentTask.mode === 'W') explanation = t.explanation_w;
+      if (currentTask.mode === 'G') explanation = t.explanation_g;
+      if (currentTask.mode === 'P') explanation = t.explanation_p;
+      
+      text.innerText = explanation;
+      area.style.display = 'block';
+      document.getElementById('btn-how-to').style.display = 'none';
     }
 
     function saveNickname() {
@@ -1643,6 +1766,7 @@
       stats.performance.wrong = 0;
       stats.performance.timeLeft = 60;
       stats.performance.token = null;
+      lives = 3;
 
       document.getElementById('score-val').innerText = '0';
       document.getElementById('perf-wrong-val').innerText = '0';
@@ -1650,6 +1774,8 @@
       document.getElementById('perf-start').style.display = 'none';
       document.getElementById('game-content').style.display = 'block';
       document.getElementById('skip-btn').style.display = 'none';
+      
+      updateLivesUI();
 
       // Anti-Cheat Token anfordern
       fetch('api_token.php', { method: 'POST' })
@@ -1756,12 +1882,16 @@
       clearTimeout(taskTimeout);
       isProcessing = false;
       lastAnswerTime = Date.now();
+      
+      document.getElementById('explanation-area').style.display = 'none';
+      document.getElementById('btn-how-to').style.display = 'none';
 
       let min = parseInt(document.getElementById('config-min').value) || 10;
       let max = parseInt(document.getElementById('config-max').value) || 1000;
       
       // Adaptive Difficulty adjustment
-      if (appMode === 'performance') {
+      const isAdaptive = document.getElementById('config-adaptive').value === 'yes';
+      if (isAdaptive && appMode === 'performance') {
         const range = max - min;
         const adjustedMax = min + Math.floor(range * (0.5 + difficultyFactor));
         max = adjustedMax;
@@ -1805,7 +1935,24 @@
 
       w = Math.round(w * 10000) / 10000;
 
-      let mode = modeSelect === 'mixed' ? ['W', 'G', 'P'][Math.floor(Math.random() * 3)] : modeSelect;
+      // Focus Mode logic
+      const isFocus = document.getElementById('config-focus').value === 'yes';
+      let mode;
+      if (isFocus && appMode === 'training') {
+        const errs = stats.errorsPerMode;
+        const maxErr = Math.max(errs.W, errs.G, errs.P);
+        if (maxErr > 0) {
+          const candidates = [];
+          if (errs.W === maxErr) candidates.push('W');
+          if (errs.G === maxErr) candidates.push('G');
+          if (errs.P === maxErr) candidates.push('P');
+          mode = candidates[Math.floor(Math.random() * candidates.length)];
+        } else {
+          mode = modeSelect === 'mixed' ? ['W', 'G', 'P'][Math.floor(Math.random() * 3)] : modeSelect;
+        }
+      } else {
+        mode = modeSelect === 'mixed' ? ['W', 'G', 'P'][Math.floor(Math.random() * 3)] : modeSelect;
+      }
 
       let result;
       if (mode === 'W') {
@@ -1913,8 +2060,31 @@
 
         streak = 0;
         // Adaptive Difficulty: Decrease
-        difficultyFactor = Math.max(0, difficultyFactor - 0.1);
-        updateDifficultyUI();
+        const isAdaptive = document.getElementById('config-adaptive').value === 'yes';
+        if (isAdaptive) {
+          difficultyFactor = Math.max(0, difficultyFactor - 0.1);
+          updateDifficultyUI();
+        }
+
+        stats.errorsPerMode[currentTask.mode]++;
+        localStorage.setItem('prozent_errors_mode', JSON.stringify(stats.errorsPerMode));
+
+        const isSurvival = document.getElementById('config-survival').value === 'yes';
+        if (isSurvival && appMode === 'performance' && isRunning) {
+          lives--;
+          updateLivesUI();
+          if (lives <= 0) {
+            showAlert(t.game_over_survival);
+            endPerformanceMode();
+            return;
+          }
+        }
+
+        const isStep = document.getElementById('config-step').value === 'yes';
+        if (isStep) {
+          document.getElementById('btn-how-to').style.display = 'block';
+          document.getElementById('btn-how-to').innerText = t.how_to_calculate;
+        }
 
         if (appMode === 'training') {
           stats.training.wrong++;
