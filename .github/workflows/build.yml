@@ -1,29 +1,48 @@
-name: Build Check
+name: Build & Deploy Check
 
 on:
   push:
     branches: [ "main" ]
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Repo auschecken
+      # Repo holen
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check index.html existiert
+      # Wichtige Dateien prüfen
+      - name: Check required files
         run: |
-          if [ ! -f index.html ]; then
-            echo "❌ index.html fehlt!"
+          echo "🔍 Checking required files..."
+          test -f index.html || (echo "❌ index.html fehlt!" && exit 1)
+          test -f highscores.php || (echo "❌ highscores.php fehlt!" && exit 1)
+          test -f save_score.php || (echo "❌ save_score.php fehlt!" && exit 1)
+
+      # Basic HTML Check
+      - name: Basic HTML check
+        run: |
+          echo "🔍 Checking HTML..."
+          grep -q "<html" index.html || (echo "❌ index.html scheint kaputt!" && exit 1)
+
+      # Live Website Check (GitHub Pages)
+      - name: Check Live Website
+        run: |
+          echo "🌐 Checking live site..."
+          curl -I https://evahtec-ops.github.io/prozenttrainer/ | grep "200" || (echo "❌ Website nicht erreichbar!" && exit 1)
+
+      # Security Check (simple)
+      - name: Check for secrets
+        run: |
+          echo "🔐 Checking for secrets..."
+          if grep -r "API_KEY" .; then
+            echo "❌ Möglicher API Key gefunden!"
             exit 1
           fi
 
-      - name: Check wichtige Dateien
-        run: |
-          test -f index.html
-          test -f highscores.php
-          test -f save_score.php
-
-      - name: Erfolg
-        run: echo "✅ Build erfolgreich"
+      # Erfolg
+      - name: Build success
+        run: echo "✅ Build erfolgreich 🎉"
