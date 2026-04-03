@@ -29,10 +29,10 @@ jobs:
           grep -q "<html" index.html || (echo "❌ index.html scheint kaputt!" && exit 1)
 
       # Live Website Check (GitHub Pages)
-      - name: Check Live Website
-        run: |
-          echo "🌐 Checking live site..."
-          curl -I https://evahtec-ops.github.io/prozenttrainer/ | grep "200" || (echo "❌ Website nicht erreichbar!" && exit 1)
+      - name: Check Live Website (optional)
+  run: |
+    echo "🌐 Checking live site..."
+    curl -I https://evahtec-ops.github.io/prozenttrainer/ || echo "⚠️ Website evtl. noch nicht live"
 
       # Security Check (simple)
       - name: Check for secrets
